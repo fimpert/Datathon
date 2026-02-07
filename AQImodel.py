@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import mplcursors
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -16,14 +17,16 @@ air_data = pd.read_excel(
 )
 
 multiTest = True;
-air_features = ['Percentage of Unhealthy Days', 'Good Days', 'Days PM2.5']
+air_features = ['Days NO2', 'Days CO', 'Days Ozone', 'Days PM10', 'Days PM2.5']
 X = pd.DataFrame(air_data[air_features])
 # X = air_data[['Percentage of Unhealthy Days']]
 
 y = air_data['Max AQI']
 
 # Training Data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# X_train, X_test, y_train, y_test, idx_train, idx_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
 
 scaler = StandardScaler()
 # Fit and transform training data.
@@ -77,8 +80,7 @@ residuals = y_test - y_pred
 
 
 # Create plots.
-plt.figure(figsize=(12,5))
-
+fig = plt.figure(figsize=(12,5))
 
 # Plot 1: Residuals Distribution.
 plt.subplot(1,2,1)
@@ -91,12 +93,15 @@ plt.ylabel("Frequency")
 
 # Plot 2: Regression Fit (Actual vs Predicted).
 plt.subplot(1,2,2)
-sns.scatterplot(x=y_test, y=y_pred, alpha=0.5)
+scatter = sns.scatterplot(x=y_test, y=y_pred, alpha=0.5)
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--')  # Perfect fit line
 plt.title("Regression Fit: Actual vs Predicted")
 plt.xlabel("Percentage of Unhealthy Days")
 plt.ylabel("Max AQI")
+cursor = mplcursors.cursor(scatter, hover=True)
 
+def on_add(sel):
+   sel.annotation.set_text(air_data.loc[idx_test.iloc[sel.index]]["County"])
 
 # Show plots.
 plt.tight_layout()
