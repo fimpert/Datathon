@@ -36,14 +36,14 @@ df['fips'] = df['fips'].astype(str).str.split('.').str[0].str.zfill(5)
 
 
 # pull relevant values
-X = df[['Percentage of Unhealthy Days', 'Max AQI']].values
+X = df[['Percentage of Unhealthy Days', 'Max AQI', '90th Percentile AQI']].values
 
 # scale
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 # k means
-k = 6
+k = 4
 kmeans_model = KMeans(n_clusters=k, init='k-means++', random_state=42)
 df["cluster"] = kmeans_model.fit_predict(X_scaled)
 
