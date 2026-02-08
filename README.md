@@ -1,6 +1,7 @@
 
 # Datathon
-Machine Learning analysis of air quality
+Machine Learning analysis of AQI - [Link to Presentation](https://www.canva.com/design/DAHAsE2ozew/kJhkc21iWzU4R4Uywwi4WA/edit?utm_content=DAHAsE2ozew&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+<br>
 
 ### Machine Learning / Predictive Modeling
 
