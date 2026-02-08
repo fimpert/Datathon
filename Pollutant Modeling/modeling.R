@@ -42,6 +42,9 @@ for (pollutant in pollutants) {
 # Print once
 print(average_percentage)
 
+write.csv(average_percentage,
+          file = "average_percentage_by_pollutant.csv",
+          row.names = FALSE)
 
 
 
