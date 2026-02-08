@@ -34,10 +34,8 @@ df = df.merge(
     how="left"
 )
 
-
 df = df.fillna(0)
 df['fips'] = df['fips'].astype(str).str.split('.').str[0].str.zfill(5)
-
 
 # pull relevant values
 X = df[[
@@ -105,7 +103,7 @@ counties['geometry'] = counties['geometry'].apply(lambda x: scale(x, xfact=1.5, 
 fig, ax = plt.subplots(1, 1, figsize=(15, 10), dpi=120)
 counties.plot(
     column='cluster_label', 
-    cmap='Reds', 
+    cmap='plasma_r', 
     categorical=True,
     legend=True, 
     linewidth=0.5, 
