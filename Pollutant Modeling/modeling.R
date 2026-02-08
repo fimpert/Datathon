@@ -24,7 +24,8 @@ percentageDays <- function(data, county_col, pollutant_col) {
 
 print(percentageDays(data, `County`, `Days.PM10`))
 
-# calculate which pollutant poses the high longest risk by adding the percentages of each county and taking the average
+# calculate which pollutant poses the high longest risk by adding the percentages of each county and 
+# taking the average
 pollutants <- c("Days.CO", "Days.NO2", "Days.Ozone", "Days.PM2.5", "Days.PM10")
 average_percentage <- data.frame()
 
@@ -39,12 +40,10 @@ for (pollutant in pollutants) {
   )
 }
 
-# Print once
 print(average_percentage)
 
 write.csv(average_percentage,
           file = "average_percentage_by_pollutant.csv",
           row.names = FALSE)
-
 
 
