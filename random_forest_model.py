@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, r2_score, accuracy_score, classification_report
+from sklearn.metrics import root_mean_squared_error, r2_score, accuracy_score, classification_report
 import matplotlib.pyplot as plt
 
 
@@ -40,27 +40,22 @@ print(df.columns.tolist())
 df.columns = df.columns.str.strip() 
 
 features = [
-    'Median AQI',
-    '90th Percentile AQI',
-    'Days CO',
-    'Days NO2',
-    'Days Ozone',
-    'Days PM2.5',
-    'Days PM10',
-    'Max AQI'
+    'Very Unhealthy Days',
+    'Hazardous Days',
+    '90th Percentile AQI'
 ]
 x = df[features]
-y = df['Percentage of Unhealthy Days']
+y = df['Max AQI']
 
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=17)
 
 
-rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+rf_model = RandomForestRegressor(n_estimators=100, random_state=17)
 rf_model.fit(X_train, y_train)
 
 y_pred = rf_model.predict(X_test)
 print("R2 Score:", r2_score(y_test, y_pred))
-print("RMSE:", mean_squared_error(y_test, y_pred, squared=False))
+print("RMSE:", root_mean_squared_error(y_test, y_pred))
 
 
 importances = rf_model.feature_importances_
@@ -71,4 +66,4 @@ plt.show()
 
 y_pred = rf_model.predict(X_test)
 print("R2:", r2_score(y_test, y_pred))
-print("RMSE:", mean_squared_error(y_test, y_pred, squared=False))
+print("RMSE:", root_mean_squared_error(y_test, y_pred))

@@ -4,6 +4,9 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from shapely.affinity import scale, translate
+from sklearn.metrics import silhouette_score
+from pandas.api.types import CategoricalDtype
+
 
 
 # load excel file
@@ -37,7 +40,10 @@ df['fips'] = df['fips'].astype(str).str.split('.').str[0].str.zfill(5)
 
 
 # pull relevant values
-X = df[['Percentage of Unhealthy Days', 'Max AQI', '90th Percentile AQI']].values
+X = df[[
+    'Very Unhealthy Days',
+    'Hazardous Days',
+    '90th Percentile AQI']].values
 
 # scale
 scaler = StandardScaler()
@@ -62,13 +68,28 @@ counties = counties[~counties['STATEFP'].isin(['60','66','69','72','78'])]
 
 
 # Sort clusters by mean % unhealthy days and reorder from lowest to highest
-cluster_summary = df.groupby('cluster')['Percentage of Unhealthy Days'].mean()
-ordered_clusters = cluster_summary.sort_values().index.tolist()
+cluster_summary = df.groupby('cluster')['90th Percentile AQI'].mean()
+ordered_clusters = cluster_summary.sort_values(ascending=True).index.tolist()
 cluster_order_map = {old: new for new, old in enumerate(ordered_clusters)}
 df['cluster_ordered'] = df['cluster'].map(cluster_order_map)
 
+
+# label clusters
+labels = {
+    0: "Low Pollution",
+    1: "Moderate Pollution",
+    2: "High Pollution",
+    3: "Severe Pollution"
+}
+df['cluster_label'] = df['cluster_ordered'].map(labels)
+
 # merge and plot
-counties = counties.merge(df[['fips', 'cluster_ordered']], left_on='GEOID', right_on='fips', how='left')
+counties = counties.merge(df[['fips', 'cluster_label']], left_on='GEOID', right_on='fips', how='left')
+counties['cluster_label'] = counties['cluster_label'].astype(CategoricalDtype(categories=["Low Pollution", "Moderate Pollution", "High Pollution", "Severe Pollution"], ordered=True))
+
+
+print(df.groupby('cluster_ordered')['90th Percentile AQI'].mean())
+print(df.groupby('cluster_label')['90th Percentile AQI'].mean())
 
 # FORMATTING
 counties = counties.to_crs("EPSG:5070")
@@ -83,14 +104,14 @@ counties['geometry'] = counties['geometry'].apply(lambda x: scale(x, xfact=1.5, 
 
 fig, ax = plt.subplots(1, 1, figsize=(15, 10), dpi=120)
 counties.plot(
-    column='cluster_ordered', 
+    column='cluster_label', 
     cmap='Reds', 
     categorical=True,
     legend=True, 
     linewidth=0.5, 
     # edgecolor='black', 
     ax=ax, 
-    legend_kwds={"title": "Cluster", "loc": "lower left", "fontsize": 10}
+    legend_kwds={"title": "Air Quality Cluster", "loc": "lower left", "fontsize": 10}
 )
 counties.boundary.plot(
     ax=ax,
@@ -100,10 +121,36 @@ counties.boundary.plot(
 # ax.set_xlim(-180, -60)
 # ax.set_ylim(15, 75)
 
-ax.set_title("K-means Clusters of Counties")
+ax.set_title("County-level Air Quality Clusters (2025)")
 ax.axis('off')
 plt.show()
 
+
+
+# elbow method
+inertias = []
+K = range(1, 11)
+
+for k in K:
+    km = KMeans(n_clusters=k, random_state=42)
+    km.fit(X_scaled)
+    inertias.append(km.inertia_)
+
+plt.plot(K, inertias, marker='o')
+plt.xlabel("Number of clusters (k)")
+plt.ylabel("Inertia")
+plt.title("Elbow Method for Optimal k")
+plt.show()
+
+# silhouette score
+sil_scores = {}
+
+for k in range(2, 8):
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    labels = kmeans.fit_predict(X_scaled)
+    score = silhouette_score(X_scaled, labels)
+    sil_scores[k] = score
+    print(f"k={k}, silhouette score={score:.3f}")
 
 # print(df["fips"].head())
 # print(df["fips"].dtype)
