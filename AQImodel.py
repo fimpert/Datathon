@@ -20,11 +20,8 @@ air_data = pd.read_excel(
 # Figure out which test, 
 multiTest = True;
 accuracyTest = ['']
-air_features = ['Very Unhealthy Days', 'Hazardous Days', 'Percentage of Unhealthy Days']
-# air_features = ['Percentage of Unhealthy Days']
-
-for variable in air_features: 
-    air_data['log_' + variable] = np.log1p(air_data[variable]) 
+air_features = ['Very Unhealthy Days', 'Hazardous Days', 'Percentage of Unhealthy Days', 'Unhealthy Days', '90th Percentile AQI']
+# air_features = ['Very Unhealthy Days']
 
 X = pd.DataFrame(air_data[air_features])
 # X = air_data[['Percentage of Unhealthy Days']]
