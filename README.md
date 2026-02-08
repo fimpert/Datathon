@@ -1,10 +1,18 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+ HEAD
+>>>>>>> 42f67ff1756fea070469de2f8cf4b7f1f0bd0871
 Additional Datasets Used:
 
 - [US County Shapefile](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html)
 
 - [SSA to FIPS State and County Crosswalk](https://www.nber.org/research/data/ssa-federal-information-processing-series-fips-state-and-county-crosswalk)
+<<<<<<< HEAD
 =======
+=======
+
+>>>>>>> 42f67ff1756fea070469de2f8cf4b7f1f0bd0871
 # Datathon
 Machine Learning analysis of air quality
 
@@ -16,4 +24,8 @@ Teams interested in ML may attempt tasks such as:
 - Predict **which counties will experience the highest pollution peaks** (Max AQI or 90th percentile AQI)
 - Cluster counties based on historical air quality patterns to identify **high-risk regions**
 - Model **pollutant-specific trends** to anticipate which pollutants pose the greatest long-term risk
+<<<<<<< HEAD
 >>>>>>> 92080a383b4c20d0a01197ae43be2086c6eef7a8
+=======
+ origin/main
+>>>>>>> 42f67ff1756fea070469de2f8cf4b7f1f0bd0871
