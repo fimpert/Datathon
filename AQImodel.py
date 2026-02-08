@@ -11,8 +11,8 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
 # save filepath to variable for easier access
-air_file_path = 'Files/Access_to_a_Livable_Planet_Dataset.xlsx'
-air_data = pd.read_excel(
+air_file_path = 'Files/Access_to_a_Livable_Planet_Dataset_Linear_Regression.csv'
+air_data = pd.read_csv(
     air_file_path,
 )
 
@@ -20,7 +20,7 @@ air_data = pd.read_excel(
 # Figure out which test, 
 multiTest = True;
 accuracyTest = ['']
-air_features = ['Very Unhealthy Days', 'Hazardous Days', 'Percentage of Unhealthy Days', 'Unhealthy Days', '90th Percentile AQI']
+air_features = ['Very Unhealthy Days', 'Hazardous Days','90th Percentile AQI']
 # air_features = ['Very Unhealthy Days']
 
 X = pd.DataFrame(air_data[air_features])
